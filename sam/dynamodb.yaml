@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: AWS SAM template for deploying a serverless API with a global DynamoDB table
+
+Parameters:
+
+
+Resources:
+  UserActivityEventTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S # uuid v4
+        - AttributeName: eventTimestamp # new Date().getTime()
+          AttributeType: N
+        - AttributeName: eventDatePartition # 2018-10-13_[0..11] -- GSI1
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: eventTimestamp
+          KeyType: RANGE
+
+
+      BillingMode:

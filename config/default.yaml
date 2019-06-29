@@ -1,0 +1,12 @@
+Environment:
+  StackName:        aws-multiregion-api-test
+  DeploymentBucket: deployment.us-west-2
+  DeploymentPrefix: sam-stream-consumer/test
+  Region:           us-west-2
+  Profile:          default
+CloudFormation:
+  EnvironmentName:  test
+Tags:
+  Email:            jim.gisler@gmail.com
+  Application:      aws-multiregion-api
+  Environment:      test

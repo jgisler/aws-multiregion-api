@@ -1,0 +1,32 @@
+{
+   "name": "aws-multiregion-api",
+   "version": "1.0.0",
+   "description": "Deploy a cross-region serverless API with a global DynamoDB table",
+   "main": "src/index.js",
+   "scripts": {
+      "config": "scripts/npm/config.js $1",
+      "package": "scripts/npm/cf_package.sh $1",
+      "deploy:test": "npm run config -- test && npm run package -- sam/api.yaml",
+      "test": "npx mocha test/ --recursive"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jgisler/aws-multiregion-api.git"
+   },
+   "keywords": [
+      "AWS",
+      "SAM",
+      "API",
+      "Gateway"
+   ],
+   "author": "James R. Gisler",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/jgisler/aws-multiregion-api/issues"
+   },
+   "homepage": "https://github.com/jgisler/aws-multiregion-api#readme",
+   "devDependencies": {
+      "config": "^3.1.0",
+      "js-yaml": "^3.13.1"
+   }
+}

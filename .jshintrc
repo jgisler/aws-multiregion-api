@@ -1,0 +1,9 @@
+{
+    "curly": true,
+	"eqeqeq": true,
+    "undef": true,
+    "noempty": true,
+    "node": true,
+    "esversion": 8,
+    "multistr": true
+}

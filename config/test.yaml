@@ -1,0 +1,6 @@
+Environment:
+  StackName:        aws-multiregion-api-test
+CloudFormation:
+  EnvironmentName:  test
+Tags:
+  Environment:      test
