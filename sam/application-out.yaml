@@ -1,0 +1,186 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS SAM template for deploying a serverless API with a global DynamoDB
+  table
+Globals:
+  Function:
+    Runtime: nodejs8.10
+Outputs:
+  UserActivityEventTableName:
+    Description: Physical resource ID of the UserActivityEventTable
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}::UserActivityEventTableName
+    Value:
+      Ref: UserActivityEventTable
+  UserActivityEventTableStreamArn:
+    Description: ARN of the table stream
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}::UserActivityEventTableStreamArn
+    Value:
+      Fn::GetAtt:
+      - UserActivityEventTable
+      - StreamArn
+Parameters:
+  AuthorizationTtlInSeconds:
+    Description: TTL for Auth cache
+    Type: Number
+  AuthorizerFunctionMemorySizeInMb:
+    Description: MemorySize setting for Authorizer lambda function, in megabytes
+    Type: Number
+  AuthorizerFunctionTimeoutInSeconds:
+    Description: Timeout setting for Authorizer lambda function, in seconds
+    Type: Number
+  EnvironmentName:
+    Description: Used in resource naming to associate resources with a stack
+    Type: String
+  LogRetentionInDays:
+    Description: Duration to keep log streams in CloudWatch
+    Type: Number
+  RequestHandlerFunctionMemorySizeInMb:
+    Description: MemorySize setting for RequestHandler lambda function, in megabytes
+    Type: Number
+  RequestHandlerFunctionTimeoutInSeconds:
+    Description: Timeout setting for RequestHandler lambda function, in seconds
+    Type: Number
+  UserActivityEventTableRCU:
+    Description: ReadCapacityUnits for UserActivityEventTable
+    Type: Number
+  UserActivityEventTableWCU:
+    Description: WriteCapacityUnits for UserActivityEventTable
+    Type: Number
+Resources:
+  AuthorizerFunction:
+    Properties:
+      CodeUri: s3://deployment.us-west-2/aws-multiregion-api--test--us-west-2/efa4477de58dcf3770e11cd1435667fa
+      Description: API Authorizer
+      Environment:
+        Variables:
+          ENVIRONMENT_NAME:
+            Ref: EnvironmentName
+      Handler: index.authorize
+      MemorySize:
+        Ref: AuthorizerFunctionMemorySizeInMb
+      Role:
+        Fn::GetAtt:
+        - AuthorizerFunctionRole
+        - Arn
+      Timeout:
+        Ref: AuthorizerFunctionTimeoutInSeconds
+    Type: AWS::Serverless::Function
+  AuthorizerFunctionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+    Type: AWS::IAM::Role
+  AuthorizerLogGroup:
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/${AuthorizerFunction}
+      RetentionInDays:
+        Ref: LogRetentionInDays
+    Type: AWS::Logs::LogGroup
+  LoggingPolicy:
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action: lambda:InvokeFunction
+          Effect: Allow
+          Resource:
+          - Fn::GetAtt:
+            - AuthorizerFunction
+            - Arn
+          - Fn::GetAtt:
+            - RequestHandlerFunction
+            - Arn
+        Version: '2012-10-17'
+      PolicyName: ApigLambdaInvokePolicy
+      Roles:
+      - Ref: AuthorizerFunctionRole
+      - Ref: RequestHandlerFunctionRole
+    Type: AWS::IAM::Policy
+  RequestHandlerFunction:
+    Properties:
+      CodeUri: s3://deployment.us-west-2/aws-multiregion-api--test--us-west-2/efa4477de58dcf3770e11cd1435667fa
+      Description: API request handlers
+      Environment:
+        Variables:
+          ENVIRONMENT_NAME:
+            Ref: EnvironmentName
+      Handler: index.handlerRequest
+      MemorySize:
+        Ref: AuthorizerFunctionMemorySizeInMb
+      Role:
+        Fn::GetAtt:
+        - RequestHandlerFunctionRole
+        - Arn
+      Timeout:
+        Ref: AuthorizerFunctionTimeoutInSeconds
+    Type: AWS::Serverless::Function
+  RequestHandlerFunctionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+    Type: AWS::IAM::Role
+  RequestHandlerLogGroup:
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/${RequestHandlerFunction}
+      RetentionInDays:
+        Ref: LogRetentionInDays
+    Type: AWS::Logs::LogGroup
+  UserActivityEventTable:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: userId
+        AttributeType: S
+      - AttributeName: eventTimestamp
+        AttributeType: N
+      - AttributeName: eventDatePartition
+        AttributeType: S
+      BillingMode: PROVISIONED
+      GlobalSecondaryIndexes:
+      - IndexName: gsi-eventDatePartion-userId
+        KeySchema:
+        - AttributeName: eventDatePartition
+          KeyType: HASH
+        - AttributeName: userId
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits:
+            Ref: UserActivityEventTableRCU
+          WriteCapacityUnits:
+            Ref: UserActivityEventTableWCU
+      KeySchema:
+      - AttributeName: userId
+        KeyType: HASH
+      - AttributeName: eventTimestamp
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits:
+          Ref: UserActivityEventTableRCU
+        WriteCapacityUnits:
+          Ref: UserActivityEventTableWCU
+      SSESpecification:
+        SSEEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      TimeToLiveSpecification:
+        AttributeName: eventExpirationDateInSeconds
+        Enabled: true
+    Type: AWS::DynamoDB::Table
+Transform: AWS::Serverless-2016-10-31

@@ -4,10 +4,14 @@
    "description": "Deploy a cross-region serverless API with a global DynamoDB table",
    "main": "src/index.js",
    "scripts": {
-      "config": "scripts/npm/config.js $1",
-      "package": "scripts/npm/cf_package.sh $1",
-      "deploy:test": "npm run config -- test && npm run package -- sam/api.yaml",
-      "test": "npx mocha test/ --recursive"
+      "test": "npx mocha test/ --recursive",
+      "cf:deploy": "scripts/npm/cf_deploy.sh $1",
+      "clean": "npx rimraf node_modules/ reports/ sam/*-out.yaml sam/dist.zip",
+      "config": "npm install && npx rimraf .env && scripts/npm/config.js $1",
+      "cf:package": "scripts/npm/cf_package.sh $1",
+      "zip": "npx rimraf sam/dist.zip && npm prune --production && npm dedupe && scripts/npm/zip.sh",
+      "package": "npm run zip && npm run cf:package $1",
+      "deploy:test": "npm run config test.us-west-2 && npm run package application && npm run cf:deploy application && date"
    },
    "repository": {
       "type": "git",

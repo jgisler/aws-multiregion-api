@@ -1,12 +1,21 @@
 Environment:
-  StackName:        aws-multiregion-api-test
-  DeploymentBucket: deployment.us-west-2
-  DeploymentPrefix: sam-stream-consumer/test
-  Region:           us-west-2
-  Profile:          default
+   StackName: aws-multiregion-api-${Environment}-${Region}
+   Environment: test
+   Region: us-west-2
+   DeploymentBucket: deployment.${Region}
+   DeploymentPrefix: ${StackName}
+   Profile: default
 CloudFormation:
-  EnvironmentName:  test
+   EnvironmentName: ${Environment}-${Region}
+   AuthorizationTtlInSeconds: 30
+   AuthorizerFunctionMemorySizeInMb: 128
+   AuthorizerFunctionTimeoutInSeconds: 30
+   RequestHandlerFunctionMemorySizeInMb: 128
+   RequestHandlerFunctionTimeoutInSeconds: 30
+   UserActivityEventTableRCU: 5
+   UserActivityEventTableWCU: 5
+   LogRetentionInDays: 14
 Tags:
-  Email:            jim.gisler@gmail.com
-  Application:      aws-multiregion-api
-  Environment:      test
+   Email: jim.gisler@gmail.com
+   Application: ${StackName}
+   EnvironmentName: ${Environment}-${Region}
