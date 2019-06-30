@@ -2,5 +2,7 @@
 set -x
 
 source .env && \
-zip -r sam/dist.zip package.json src/ node_modules/ \
+npx rimraf sam/dist && mkdir sam/dist && \
+npm prune --production && npm dedupe && \
+zip -r sam/dist/dist.zip .env package.json src/ node_modules/ \
     -x node_modules/.bin/ node_modules/.cache/

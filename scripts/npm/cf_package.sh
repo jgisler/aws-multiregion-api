@@ -8,10 +8,9 @@ then
 else
     templateName=$1 && \
     source .env && \
-    npx rimraf sam/${templateName}-out.yaml && \
     aws cloudformation package \
         --template-file sam/${templateName}.yaml \
-        --output-template-file sam/${templateName}-out.yaml \
+        --output-template-file sam/dist/${templateName}-out.yaml \
         --s3-bucket ${DeploymentBucket} \
         --s3-prefix ${DeploymentPrefix} \
         --region ${Region} \

@@ -1,8 +1,2 @@
 Environment:
-   StackName: aws-multiregion-api.test.us-west-2
-   EnvironmentName: test
-   Region: us-west-2
-CloudFormation:
-   EnvironmentName: test.us-west-2
-Tags:
-   Environment: test
+   Region: us-east-1

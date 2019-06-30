@@ -4,14 +4,16 @@
    "description": "Deploy a cross-region serverless API with a global DynamoDB table",
    "main": "src/index.js",
    "scripts": {
-      "test": "npx mocha test/ --recursive",
-      "cf:deploy": "scripts/npm/cf_deploy.sh $1",
-      "clean": "npx rimraf node_modules/ reports/ sam/*-out.yaml sam/dist.zip",
+      "zip": "scripts/npm/zip.sh",
+      "deploy": "scripts/npm/cf_deploy.sh $1",
+      "package": "npm run zip && scripts/npm/cf_package.sh $1",
       "config": "npm install && npx rimraf .env && scripts/npm/config.js $1",
-      "cf:package": "scripts/npm/cf_package.sh $1",
-      "zip": "npx rimraf sam/dist.zip && npm prune --production && npm dedupe && scripts/npm/zip.sh",
-      "package": "npm run zip && npm run cf:package $1",
-      "deploy:test": "npm run config test.us-west-2 && npm run package application && npm run cf:deploy application && date"
+      "test": "npx mocha test/ --recursive",
+      "deploy:": "npm run cf:deploy $1",
+      "deploy:stack": "npm run package application && npm run deploy application && date",
+      "deploy:test": "npm run deploy:test:us-west-2 && npm run deploy:test:us-east-1",
+      "deploy:test:us-west-2": "npm run config test.us-west-2 && npm run deploy:stack",
+      "deploy:test:us-east-1": "npm run config test.us-east-1 && npm run deploy:stack"
    },
    "repository": {
       "type": "git",

@@ -1,7 +1,7 @@
 Environment:
-   StackName: aws-multiregion-api-${Environment}-${Region}
-   Environment: test
    Region: us-west-2
+   Environment: test
+   StackName: aws-multiregion-api-${Environment}-${Region}
    DeploymentBucket: deployment.${Region}
    DeploymentPrefix: ${StackName}
    Profile: default

@@ -1,2 +1,2 @@
 Environment:
-   StackName: aws-multiregion-api--test--us-west-2
+   Region: us-west-2

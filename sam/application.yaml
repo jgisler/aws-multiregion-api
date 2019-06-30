@@ -49,7 +49,7 @@ Resources:
       Properties:
          Role: !GetAtt AuthorizerFunctionRole.Arn
          Handler: index.authorize
-         CodeUri: dist.zip
+         CodeUri: dist/dist.zip
          Description: API Authorizer
          Timeout: !Ref AuthorizerFunctionTimeoutInSeconds
          MemorySize: !Ref AuthorizerFunctionMemorySizeInMb
@@ -80,7 +80,7 @@ Resources:
       Properties:
          Role: !GetAtt RequestHandlerFunctionRole.Arn
          Handler: index.handlerRequest
-         CodeUri: dist.zip
+         CodeUri: dist/dist.zip
          Timeout: !Ref AuthorizerFunctionTimeoutInSeconds
          MemorySize: !Ref AuthorizerFunctionMemorySizeInMb
          Description: API request handlers
