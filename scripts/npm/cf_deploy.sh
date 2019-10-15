@@ -9,7 +9,7 @@ else
     templateName=$1 && \
     source .env && \
     aws cloudformation deploy --stack-name ${StackName} \
-        --template-file sam/dist/${templateName}-out.yaml \
+        --template-file ${templateName}-out.yaml \
         --parameter-overrides ${CloudFormationParams} \
         --no-fail-on-empty-changeset \
         --s3-bucket ${DeploymentBucket} \

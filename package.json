@@ -3,17 +3,23 @@
    "version": "1.0.0",
    "description": "Deploy a cross-region serverless API with a global DynamoDB table",
    "main": "src/index.js",
+   "config": {
+      "scripts_dir": "scripts/npm",
+      "scripts_repo": "https://github.com/jgisler/npm-scripts"
+   },
    "scripts": {
-      "zip": "scripts/npm/zip.sh",
-      "deploy": "scripts/npm/cf_deploy.sh $1",
-      "package": "npm run zip && scripts/npm/cf_package.sh $1",
-      "config": "npm install && npx rimraf .env && scripts/npm/config.js $1",
+      "cs": "git clone ${npm_package_config_scripts_repo} ${npm_package_config_scripts_dir}",
+      "clean": "rimraf node_modules *-out.yaml dist.zip scripts/npm && npm install && npm run cs",
+      "zip": "${npm_package_config_scripts_dir}/zip.sh",
+      "deploy": "${npm_package_config_scripts_dir}/cf_deploy.sh $1",
+      "package": "npm run zip && ${npm_package_config_scripts_dir}/cf_package.sh $1",
+      "config": "npm install && npx rimraf .env && ${npm_package_config_scripts_dir}/config.js $1",
       "test": "npx mocha test/ --recursive",
       "deploy:": "npm run cf:deploy $1",
-      "deploy:stack": "npm run package application && npm run deploy application && date",
+      "deploy:stack": "npm run package app && npm run deploy app && date",
       "deploy:test": "npm run deploy:test:us-west-2 && npm run deploy:test:us-east-1",
-      "deploy:test:us-west-2": "npm run config test.us-west-2 && npm run deploy:stack",
-      "deploy:test:us-east-1": "npm run config test.us-east-1 && npm run deploy:stack"
+      "deploy:test:us-west-2": "npm run config test-us-west-2 && npm run deploy:stack",
+      "deploy:test:us-east-1": "npm run config test-us-east-1 && npm run deploy:stack"
    },
    "repository": {
       "type": "git",
@@ -32,7 +38,12 @@
    },
    "homepage": "https://github.com/jgisler/aws-multiregion-api#readme",
    "devDependencies": {
+      "aws-sdk": "^2.548.0",
+      "aws-sdk-mock": "^4.5.0",
       "config": "^3.1.0",
       "js-yaml": "^3.13.1"
+   },
+   "dependencies": {
+      "winston": "^3.2.1"
    }
 }

@@ -10,7 +10,7 @@ else
     source .env && \
     aws cloudformation package \
         --template-file sam/${templateName}.yaml \
-        --output-template-file sam/dist/${templateName}-out.yaml \
+        --output-template-file ${templateName}-out.yaml \
         --s3-bucket ${DeploymentBucket} \
         --s3-prefix ${DeploymentPrefix} \
         --region ${Region} \

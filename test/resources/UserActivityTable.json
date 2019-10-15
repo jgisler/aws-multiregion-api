@@ -1,0 +1,9 @@
+{
+   "userId": "abc-123",
+   "activityTimestamp": 123456789,
+   "activityDatePartition": "2019-10-13_0",
+   "activityDate": "2019-10-13T11:32:00.000Z",
+   "eventSource": "some-app-id",
+   "eventType": "some-event-type",
+   "itemExpirationDateInSeconds": 123456000
+}
