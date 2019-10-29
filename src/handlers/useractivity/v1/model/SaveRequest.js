@@ -14,6 +14,8 @@ class SaveUserActivityV1Request {
       // 30 days TTL
       const itemExpirationDate = new Date(activityDate.toISOString());
       itemExpirationDate.setDate(itemExpirationDate.getDate() + 30);
+
+      // TTL timestamps are in seconds
       this.itemExpirationDateInSeconds = itemExpirationDate.getTime() / 1000;
    }
 

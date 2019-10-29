@@ -41,7 +41,8 @@
       "aws-sdk": "^2.548.0",
       "aws-sdk-mock": "^4.5.0",
       "config": "^3.1.0",
-      "js-yaml": "^3.13.1"
+      "js-yaml": "^3.13.1",
+      "prettier": "^1.18.2"
    },
    "dependencies": {
       "winston": "^3.2.1"

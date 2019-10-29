@@ -1,4 +1,4 @@
-const { getLogger } = require('../../../logger');
+const { getLogger } = require('../../../util/logger');
 const logger = getLogger('GetUserActivityV1');
 
 const {

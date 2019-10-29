@@ -1,4 +1,4 @@
-const { ValidationError } = require('./ValidationErrorResponse');
+const { ValidationError } = require('./ErrorResponse');
 
 class GetUserActitivityV1Request {
    constructor(event) {
