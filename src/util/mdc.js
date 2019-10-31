@@ -7,11 +7,9 @@ class MDC {
 }
 
 let mdc;
+module.exports.getMdc = () => mdc;
+
 module.exports = (event, ctx, next) => {
-   if (mdc === undefined) {
-      mdc = new MDC(ctx);
-   }
+   mdc = new MDC(ctx);
    return next(event, ctx);
 };
-
-module.exports.getMdc = () => mdc;
