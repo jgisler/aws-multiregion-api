@@ -1,3 +1,3 @@
-const mdc = require('./mdc');
-const { getLogger } = require('./logger');
-module.exports = { mdc, logger };
+const Logger = require('./Logger');
+const { getDynamoDocClient } = require('./ClientFactory');
+module.exports = { Logger, getDynamoDocClient };

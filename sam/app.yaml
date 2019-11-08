@@ -183,15 +183,11 @@ Resources:
          AttributeDefinitions:
             - AttributeName: userId
               AttributeType: S # uuid v4
-            - AttributeName: activityTimestamp # new Date().getTime()
-              AttributeType: N
             - AttributeName: activityDatePartition # 2018-10-13_[0..11] -- GSI1
               AttributeType: S
          KeySchema:
             - AttributeName: userId
               KeyType: HASH
-            - AttributeName: activityTimestamp
-              KeyType: RANGE
          ProvisionedThroughput:
             ReadCapacityUnits: !Ref UserActivityTableRCU
             WriteCapacityUnits: !Ref UserActivityTableWCU

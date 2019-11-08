@@ -1,20 +1,26 @@
 const { createLogger, format, transports } = require('winston');
+const { combine, timestamp, errors, json, colorize } = format;
 
-module.exports.getLogger = name =>
-   createLogger({
+let parentLogger;
+function init(ctx) {
+   parentLogger = createLogger({
       level: 'info',
-      defaultMeta: { service: name },
+      defaultMeta: ctx,
       transports: [
          new transports.Console({
-            format: format.combine(
-               format.timestamp({
-                  format: 'YYYY-MM-DD HH:mm:ss'
-               }),
-               format.errors({ stack: true }),
-               format.splat(),
-               format.json(),
-               format.colorize()
-            )
+            format: combine(colorize(), timestamp(), json(), errors({ stack: true }))
          })
       ]
    });
+
+   return parentLogger;
+}
+
+function getLogger(className) {
+   if (parentLogger === undefined) {
+      throw new Error('init(ctx) must be called first');
+   }
+   return parentLogger.child({ class: className });
+}
+
+module.exports = { init, getLogger };

@@ -1,12 +1,10 @@
-const { ValidationError } = require('./ValidationError');
-
 class SaveUserActivityV1Request {
    constructor(event) {
       this.traceId = event.requestContext.requestId;
-      this.userId = event.userId;
-      this.activityDate = event.activityDate;
-      this.eventSource = event.eventSource;
-      this.eventType = event.eventType;
+      this.userId = event.body.userId;
+      this.activityDate = event.body.activityDate;
+      this.eventSource = event.body.eventSource;
+      this.eventType = event.body.eventType;
 
       const activityDate = new Date(this.activityDate);
       this.activityTimestamp = activityDate.getTime();
@@ -23,19 +21,19 @@ class SaveUserActivityV1Request {
       const errors = [];
 
       if (this.userId === undefined) {
-         errors.push(new ValidationError('userId not defined'));
+         errors.push('userId not defined');
       }
 
       if (this.activityDate === undefined) {
-         errors.push(new ValidationError('activityDate not defined'));
+         errors.push('activityDate not defined');
       }
 
       if (this.eventSource === undefined) {
-         errors.push(new ValidationError('eventSource not defined'));
+         errors.push('eventSource not defined');
       }
 
       if (this.eventType === undefined) {
-         errors.push(new ValidationError('eventType not defined'));
+         errors.push('eventType not defined');
       }
 
       return errors;

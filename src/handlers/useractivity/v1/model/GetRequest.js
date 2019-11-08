@@ -12,15 +12,15 @@ class GetUserActitivityV1Request {
       const errors = [];
 
       if (this.userId === undefined) {
-         errors.push(new ValidationError('userId not defined'));
+         errors.push('userId not defined');
       }
 
       if (!this.resource.includes('/useractivity/v1')) {
-         errors.push(new ValidationError('Invalid resource path'));
+         errors.push('Invalid resource path');
       }
 
       if ('GET' !== this.httpMethod.toUpperCase()) {
-         errors.push(new ValidationError('Invalid resource path'));
+         errors.push('Invalid resource path');
       }
 
       return errors;
