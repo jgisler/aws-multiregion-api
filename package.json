@@ -38,7 +38,7 @@
    },
    "homepage": "https://github.com/jgisler/aws-multiregion-api#readme",
    "devDependencies": {
-      "aws-sdk": "^2.562.0",
+      "aws-sdk": "^2.814.0",
       "aws-sdk-mock": "^4.5.0",
       "chai": "^4.2.0",
       "config": "^3.1.0",
